@@ -8,7 +8,7 @@ using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace BattleCom
+namespace Battleships.Communication
 {
     public static class InitGame
     {

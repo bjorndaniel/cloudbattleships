@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.Configuration;
 
-namespace BattleCom
+namespace Battleships.Communication
 {
     public static class Negotiate
     {

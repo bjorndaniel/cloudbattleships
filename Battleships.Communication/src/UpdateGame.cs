@@ -6,7 +6,7 @@ using Microsoft.Azure.WebJobs.Host;
 using System.Collections.Generic;
 using System.Dynamic;
 
-namespace BattleCom
+namespace Battleships.Communication
 {
     public static class UpdateGame
     {

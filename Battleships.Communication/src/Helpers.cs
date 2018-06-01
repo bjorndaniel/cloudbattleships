@@ -1,4 +1,4 @@
-﻿namespace BattleCom
+﻿namespace Battleships.Communication
 {
 
     public class InitGameMessage

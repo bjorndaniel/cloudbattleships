@@ -4,7 +4,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 
-namespace BattleCom
+namespace Battleships.Communication
 {
     public static class GetGame
     {

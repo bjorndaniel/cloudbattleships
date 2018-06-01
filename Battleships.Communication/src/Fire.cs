@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using System.Dynamic;
 using System.Threading.Tasks;
 
-namespace BattleCom
+namespace Battleships.Communication
 {
     public static class Fire
     {

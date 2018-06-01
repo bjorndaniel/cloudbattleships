@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System.Dynamic;
 using System.IO;
 
-namespace BattleCom
+namespace Battleships.Communication
 {
     public static class Messages
     {

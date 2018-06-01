@@ -1,4 +1,4 @@
-using Microsoft.Azure.WebJobs.Host;
+using Battleships.Communication;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BattleCom.Test
+namespace Battleships.Tests
 {
     public class CosmosHandlerTests
     {
@@ -29,7 +29,6 @@ namespace BattleCom.Test
                     Environment.SetEnvironmentVariable(_.Name, _.Value.ToString());
                 });
             }
-
         }
 
         [Fact]
