@@ -39,12 +39,14 @@ namespace Battleships.Tests
             var game = CosmosHandler.GetGame(id, null);
             var player = game.GetPlayerByClientId(clientId);
             Assert.Equal(100, player.GameBoard.Count);
+
             var clientId2 = Guid.NewGuid().ToString();
             var newId = await CosmosHandler.FindOpenGame("Player2", clientId2, null);
             Assert.Equal(id, newId);
             game = CosmosHandler.GetGame(newId, null);
             player = game.GetPlayerByClientId(clientId);
             Assert.Equal(100, player.GameBoard.Count);
+
             var player2 = game.GetPlayerByClientId(clientId2);
             Assert.Equal(100, player2.GameBoard.Count);
             await CosmosHandler.PlayToEnd(newId, null);
