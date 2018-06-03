@@ -15,11 +15,11 @@ The functions are:
 - PlayToEnd - Called by a client, will use the gamecontroller to play automatically until one client has won
 - UpdateGame - Triggered by a CosmosDB update, will broadcast the updated game to all clients
 
-Check local.settings.json for the required keys.
+Check local.settings.json for the required keys.<br/>
 It has default values to use a local Cosmos DB and the functions will run on localhost:7071
 
 ## Battleships.Model
-The gamelogic from [ExceptionNotFound](https://exceptionnotfound.net/modeling-battleship-in-csharp-introduction-and-strategies/)
+The gamelogic from [ExceptionNotFound](https://exceptionnotfound.net/modeling-battleship-in-csharp-introduction-and-strategies/)<br/>
 Also contains a class used by the clients to connect to the functions called ConnectionSettings.cs
 
 ## Battleships.OouiCoreUi
