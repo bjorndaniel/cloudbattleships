@@ -1,4 +1,5 @@
-﻿namespace Battleships.BlazorUI
+﻿
+namespace Battleships.Model.Helpers
 {
     public class ConnectionSettings
     {

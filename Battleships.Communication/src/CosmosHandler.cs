@@ -47,9 +47,7 @@ namespace Battleships.Communication
                         log?.Info($"Creating a new game for player {userName} with clientid {clientId}");
                         freeGame = GameController.CreateGame();
                         GameController.AddPlayer(freeGame, userName, clientId);
-                        var jsonString = JsonConvert.SerializeObject(freeGame);
-                        var jObject = JsonConvert.DeserializeObject(jsonString);
-                        var d = await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_dbName, _collectionName), jObject);
+                        var d = await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_dbName, _collectionName), freeGame);
                         return d.Resource.Id;
                     }
                 }

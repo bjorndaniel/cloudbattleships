@@ -10,12 +10,15 @@ Blazor.registerFunction("Battleships.BlazorUI.JsInterop.InitSignalR", () => {
     isInitialized = true;
     console.log("Setting up SignalR connection");
     getConnectionInfo().then(info => {
+        var accessKey = info.accessKey ? info.accessKey : info.AccessKey;
+
         const options = {
-            accessTokenFactory: () => info.accessKey
+            accessTokenFactory: () => accessKey
         };
+        var endpoint = info.endpoint ? info.endpoint : info.Endpoint;
         connection = new signalR
             .HubConnectionBuilder()
-            .withUrl(info.endpoint, options)
+            .withUrl(endpoint, options)
             .configureLogging(signalR.LogLevel.Information)
             .build();
         connection.on("ReceiveMessage", messageReceived);

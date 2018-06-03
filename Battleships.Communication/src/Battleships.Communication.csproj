@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.Azure.WebJobs.Script.ExtensionsMetadataGenerator" Version="1.0.0-beta3" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.0.0-preview" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" Version="3.0.0-beta7" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
 
   </ItemGroup>
   <ItemGroup>
