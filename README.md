@@ -9,14 +9,14 @@ Web client for the application written using the experimental [Blazor framework]
 ## Battleships.Communication
 A project consisting off 7 Azure functions used to communicate with the clients and the Cosmos DB
 The functions are:
-    - Fire - Called by a client to fire a shot
-    - InitGame - Called by a client to join a game
-    - Messages - Used to send messages between the clients. 
-    - Negotiate - called by the clients to get the Azure SignalR connection informations (stored in an application setting AzureSignalRConnectionString)
-    - PlayToEnd - Called by a client, will use the gamecontroller to play automatically until one client has won
-    - UpdateGame - Triggered by a CosmosDB update, will broadcast the updated game to all clients
+- InitGame - Called by a client to join a game
+- Messages - Used to send messages between the clients. 
+- Negotiate - called by the clients to get the Azure SignalR connection informations (stored in an application setting AzureSignalRConnectionString)
+- PlayToEnd - Called by a client, will use the gamecontroller to play automatically until one client has won
+- UpdateGame - Triggered by a CosmosDB update, will broadcast the updated game to all clients
 
-Check local.settings.json for the required keys. It has default values to use a local Cosmos DB and the functions will run on localhost:7071
+Check local.settings.json for the required keys.
+It has default values to use a local Cosmos DB and the functions will run on localhost:7071
 
 ## Battleships.Model
 The gamelogic from [ExceptionNotFound](https://exceptionnotfound.net/modeling-battleship-in-csharp-introduction-and-strategies/)
@@ -25,7 +25,7 @@ Also contains a class used by the clients to connect to the functions called Con
 ## Battleships.OouiCoreUi
 A [Ooui](https://github.com/praeclarum/ooui) version of the Xamarin forms client. Using asp.net core as a server.
 
-## Batleships.Tests
+## Battleships.Tests
 A xunit project to put tests in.
 
 ## Battleships.XamFormsUI
@@ -34,13 +34,13 @@ A [Xamarin forms](https://docs.microsoft.com/en-us/xamarin/xamarin-forms/) proje
 - iOS (not working right now due to a [signalR client issue](https://github.com/aspnet/SignalR/issues/1886))
 - UWP
 
-##Links and references
+## Links and references
 - [CosmosDB emulator](https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator)
 - [Azure functions bindings for Azure SignalR](https://github.com/anthonychu/AzureAdvocates.WebJobs.Extensions.SignalRService)
 - [Blazor](https://blazor.net)
 - [Ooui](https://github.com/praeclarum/ooui)
 
-##The future
+## tThe future
 - Get the iOS version working
 - Add an [Uno version](http://platform.uno/)
 - Refactor the UI with some animations
