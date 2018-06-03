@@ -41,7 +41,9 @@ A [Xamarin forms](https://docs.microsoft.com/en-us/xamarin/xamarin-forms/) proje
 - [Ooui](https://github.com/praeclarum/ooui)
 
 ## The future
+- Solve the shared? ui for Ooui
 - Get the iOS and Android versions working
 - Add an [Uno version](http://platform.uno/)
-- Refactor the UI with some animations
+- Refactor the UI
+- Add some animations
 - Better error handling
