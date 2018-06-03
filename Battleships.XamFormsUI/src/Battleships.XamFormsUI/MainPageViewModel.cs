@@ -159,6 +159,7 @@ namespace Battleships.XamFormsUI
             Device.OpenUri(new Uri("https://github.com/bjorndaniel/cloudbattleships"));
 
         }
+
         internal void UpdateGame(UpdateGameDTO message)
         {
             bool update = message.Game.Player1.ClientId == ClientId || message.Game.Player2.ClientId == ClientId;
@@ -181,7 +182,5 @@ namespace Battleships.XamFormsUI
             }
 
         }
-        
     }
-
 }
