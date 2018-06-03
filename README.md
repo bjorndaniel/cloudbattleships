@@ -40,7 +40,7 @@ A [Xamarin forms](https://docs.microsoft.com/en-us/xamarin/xamarin-forms/) proje
 - [Blazor](https://blazor.net)
 - [Ooui](https://github.com/praeclarum/ooui)
 
-## tThe future
+## The future
 - Get the iOS version working
 - Add an [Uno version](http://platform.uno/)
 - Refactor the UI with some animations
