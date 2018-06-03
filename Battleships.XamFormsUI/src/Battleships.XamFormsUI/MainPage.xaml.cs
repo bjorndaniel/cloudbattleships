@@ -127,7 +127,6 @@ namespace Battleships.XamFormsUI
                 {
                     Device.BeginInvokeOnMainThread(() => { _viewModel.UpdateGame(message); });
                 });
-                _hubConnection.Closed += (e) => { _hubConnection = null; return null; };
                 await _hubConnection.StartAsync();
             }
             catch (Exception e)

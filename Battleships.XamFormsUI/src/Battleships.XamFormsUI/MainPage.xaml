@@ -17,7 +17,7 @@
             </FlexLayout>
             <ScrollView>
                 <StackLayout>
-                    <FlexLayout HeightRequest="35"  Direction="Row" JustifyContent="Center">
+                    <FlexLayout HeightRequest="50"  Direction="Row" JustifyContent="Center">
                         <Entry Text="{Binding Player.Name}"   Placeholder="Enter username" MinimumWidthRequest="250" IsEnabled="{Binding CanInitGame}"></Entry>
                         <Button Text="Play game"  Command="{Binding PlayGameCommand}" WidthRequest="150" IsEnabled="{Binding CanInitGame}"></Button>
                     </FlexLayout>
@@ -40,7 +40,7 @@
                                 <Button Text="Fire" HeightRequest="50" BackgroundColor="Tomato" IsEnabled="{Binding Player.IsMyTurn}" Command="{Binding FireCommand}"></Button>
                                 <Button Text="Play to end" HeightRequest="50" TextColor="White" IsEnabled="{Binding Player.IsMyTurn}" BackgroundColor="Blue" Command="{Binding PlayToEndCommand}"></Button>
                             </FlexLayout>
-                            <FlexLayout FlexLayout.Grow="1" HeightRequest="35" Direction="Row" JustifyContent="Center" >
+                            <FlexLayout FlexLayout.Grow="1" HeightRequest="50" Direction="Row" JustifyContent="Center" >
                                 <Entry Text="{Binding Message}" Placeholder="Enter message" MinimumWidthRequest="250"></Entry>
                                 <Button Text="Send message"  Command="{Binding SendMessageCommand}"></Button>
                             </FlexLayout>

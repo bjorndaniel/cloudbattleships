@@ -9,7 +9,6 @@
     <PackageReference Include="Refractored.MvvmHelpers" Version="1.3.2.47-beta" />
     <PackageReference Include="System.Memory" Version="4.5.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
-    <PackageReference Include="Xamarin.LiveReload" Version="0.3.27" />
   </ItemGroup>
 
   <ItemGroup>

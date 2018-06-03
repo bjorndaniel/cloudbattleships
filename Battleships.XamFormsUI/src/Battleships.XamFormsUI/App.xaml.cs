@@ -9,7 +9,7 @@ namespace Battleships.XamFormsUI
 		public App ()
 		{
 #if DEBUG
-            LiveReload.Init();
+            //LiveReload.Init(); TODO: Fix version mismatch with extension.
 #endif
 
             InitializeComponent();
