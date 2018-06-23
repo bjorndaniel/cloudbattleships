@@ -23,17 +23,20 @@ namespace Battleships.Communication
 
         private static async Task<SignalRMessage> GetMessage(HttpRequest req, TraceWriter log)
         {
-            string requestBody = new StreamReader(req.Body).ReadToEnd();
-            var data = JsonConvert.DeserializeObject<InitGameMessage>(requestBody);
-            dynamic mess = new ExpandoObject();
-            mess.User = "Server";
-            mess.Message = $"A player connected to game server as {data.User}";
-            var g = await CosmosHandler.FindOpenGame(data.User, data.ClientId, log);
-            return new SignalRMessage
+            using (var sr = new StreamReader(req.Body))
+            using (var reader = new JsonTextReader(sr))
             {
-                Target = "ReceiveMessage",
-                Arguments = new object[] { mess }
-            };
+                var data = new JsonSerializer().Deserialize<InitGameMessage>(reader);
+                dynamic mess = new ExpandoObject();
+                mess.User = "Server";
+                mess.Message = $"A player connected to game server as {data.User}";
+                await CosmosHandler.FindOpenGame(data.User, data.ClientId, log);
+                return new SignalRMessage
+                {
+                    Target = "ReceiveMessage",
+                    Arguments = new object[] { mess }
+                };
+            }
         }
     }
 

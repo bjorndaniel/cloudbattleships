@@ -17,16 +17,19 @@ namespace Battleships.Communication
         public static SignalRMessage Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, TraceWriter log)
         {
             log.Info("A message was received");
-            string requestBody = new StreamReader(req.Body).ReadToEnd();
-            dynamic data = JsonConvert.DeserializeObject<ChatMessage>(requestBody);
-            dynamic mess = new ExpandoObject();
-            mess.User = data.User;
-            mess.Message = data.Message;
-            return new SignalRMessage
+            using (var sr = new StreamReader(req.Body))
+            using (var reader = new JsonTextReader(sr))
             {
-                Target = "ReceiveMessage",
-                Arguments = new object[] { data }
-            };
+                var data = new JsonSerializer().Deserialize<ChatMessage>(reader);
+                dynamic mess = new ExpandoObject();
+                mess.User = data.User;
+                mess.Message = data.Message;
+                return new SignalRMessage
+                {
+                    Target = "ReceiveMessage",
+                    Arguments = new object[] { data }
+                };
+            }
         }
     }
 }
