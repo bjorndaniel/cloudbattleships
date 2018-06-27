@@ -30,8 +30,8 @@ A xunit project to put tests in.
 
 ## Battleships.XamFormsUI
 A [Xamarin forms](https://docs.microsoft.com/en-us/xamarin/xamarin-forms/) project with 3 clients
-- Android (not working right now due to a [signalR client issue](https://github.com/aspnet/SignalR/issues/1886))
-- iOS (not working right now due to a [signalR client issue](https://github.com/aspnet/SignalR/issues/1886))
+- Android
+- iOS
 - UWP
 
 ## Links and references
