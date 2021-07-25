@@ -1,5 +1,7 @@
 
+# NOTE: I am currently re-writing this to use .NET 6 as well as .NET MAUI for the mobile front-ends. Will pubhlish new code here shortly
 # Battleships
+
 #### A serverless implementation of the classic Battleships game
 Insipration and game logic from [ExceptionNotFound](https://exceptionnotfound.net/modeling-battleship-in-csharp-introduction-and-strategies/)
 
