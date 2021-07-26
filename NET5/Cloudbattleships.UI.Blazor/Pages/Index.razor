@@ -28,7 +28,7 @@
 
 @code {
     private HubConnection _hubConnection;
-    private List<ClientMessage> messages = new List<ClientMessage>();
+    private List<ChatMessage> messages = new List<ChatMessage>();
     private string _userInput;
     private string _messageInput;
     private readonly HttpClient _httpClient = new HttpClient();
@@ -39,9 +39,9 @@
     {
         _functionsUrl = Configuration["FunctionsApi"];
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl(_functionsUrl)
+            .WithUrl($"{_functionsUrl}/api/")
             .Build();
-        _hubConnection.On<ClientMessage>("clientMessage", (clientMessage) =>
+        _hubConnection.On<ChatMessage>("newMessage", (clientMessage) =>
         {
             messages.Add(clientMessage);
             StateHasChanged();
@@ -51,19 +51,14 @@
 
     async Task SendAsync()
     {
-        var msg = new ClientMessage
+        var msg = new ChatMessage
         {
             Name = _userInput,
             Message = _messageInput
         };
-        await _httpClient.PostAsJsonAsync($"{_functionsUrl}/messages", msg);
+        await _httpClient.PostAsJsonAsync($"{_functionsUrl}/api/messages", msg);
         _messageInput = string.Empty;
         StateHasChanged();
     }
 
-    public class ClientMessage
-    {
-        public string Name { get; set; }
-        public string Message { get; set; }
-    }
 }

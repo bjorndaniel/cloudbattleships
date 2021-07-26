@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cloudbattleships.Model\Cloudbattleships.Model.csproj" />
+    <ProjectReference Include="..\Cloudbattleships.Shared\Cloudbattleships.Shared.csproj" />
   </ItemGroup>
 
 </Project>

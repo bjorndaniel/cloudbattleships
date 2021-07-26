@@ -9,7 +9,7 @@ namespace Cloudbattleships.Backend.Functions
     {
         [Function("Negotiate")]
         public static HttpResponseData Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get","post")] HttpRequestData req,
             [SignalRConnectionInfoInput(HubName = "cloudbattleships")] string connectionInfo,
             FunctionContext executionContext
         )

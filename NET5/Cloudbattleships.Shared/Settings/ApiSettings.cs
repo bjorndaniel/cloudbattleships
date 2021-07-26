@@ -1,4 +1,4 @@
-﻿namespace Cloudbattleships.Model.Settings
+﻿namespace Cloudbattleships.Shared.Settings
 {
     public class ApiSettings
     {
