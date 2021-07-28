@@ -3,12 +3,12 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "AzureSignalRConnectionString": "Endpoint=https://cloudbattleships.service.signalr.net;AccessKey=Bw4tvAn5ofcNh0t0CKQd6YoHg9oDm90xcGU3/496db0=;Version=1.0;",
-    "CosmosUri": "https://cloudbattleships.documents.azure.com:443/",
-    "CosmosKey": "Q9NHfdgSgBP9GNyci0dpmmD4ew1rASiWH0WHohMLJbkp86cqXo16CdqpU5ostHBvgvmjU6mOzTZ24T1aY1fQ9Q==",
-    "CosmosConnection": "AccountEndpoint=https://cloudbattleships.documents.azure.com:443/;AccountKey=Q9NHfdgSgBP9GNyci0dpmmD4ew1rASiWH0WHohMLJbkp86cqXo16CdqpU5ostHBvgvmjU6mOzTZ24T1aY1fQ9Q==;",
-    "DbName": "cloudbattleships",
-    "DbCollection": "games"
+    "AzureSignalRConnectionString": "YOUR-AZURE-SIGNALR-CONNECTIONSTRING",
+    "CosmosUri": "YOUR-COSMOSDB-URI",
+    "CosmosKey": "YOUR-COSMOS-DB-ACCESSKEY",
+    "CosmosConnection": "YOUR-COSMOSDB-CONNECTION-STRING",
+    "DbName": "YOUR-DB-NAME",
+    "DbCollection": "YOUR-DOCUMENT-COLLECTION"
   },
   "Host": {
     "LocalHttpPort": 7071,
