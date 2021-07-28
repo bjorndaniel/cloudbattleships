@@ -1,39 +1,67 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.SignalR.Client
+@inject HttpClient HttpClient
 @inject IConfiguration Configuration
-<h1>@_hubConnection.State</h1>
 
-<div class="form-group">
-    <label>
+<main role="main" class="justify-content-center text-center mt-auto">
+    <div class="row align-self-top justify-content-center text-center">
+        <div class="col">
+            <h2>Blazorships - a battleships implementation</h2>
+            <p>Built using Blazor, Cosmos Db, Azure Functions and Azure SignalR</p>
+        </div>
+    </div>
+    <div class="row justify-content-center  ">
+        <div class="col-6 offset-3 mx-auto">
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Username" @bind="@_userName" @onfocusout="@((e) => _startDisabled = string.IsNullOrEmpty(_userName))" />
+                </div>
+                <button type="button" class="btn btn-primary mb-2" disabled="@_startDisabled" @onclick=@StartGame>Play game</button>
+                <small class="form-text text-muted-app">Type a username and click Play game to join a game if one exists or create a new one and wait for opponent</small>
+
+                @*   <input type="hidden" bind="@Player.Id" id="playerId" />
+                    <input type="hidden" bind="@CurrentGame.id" id="gameId" />
+                    <input type="hidden" bind="@SelectedRow" id="hfSelectedRow" />
+                    <input type="hidden" bind="@SelectedColumn" id="hfSelectedColumn" />
+                    <input type="hidden" bind="@ClientId" id="hfClientId" />*@
+            </form>
+        </div>
+    </div>
+
+    @* <h1>@_hubConnection.State</h1>
+
+        <div class="form-group">
+        <label>
         User:
         <input @bind="_userInput" />
-    </label>
-</div>
-<div class="form-group">
-    <label>
+        </label>
+        </div>
+        <div class="form-group">
+        <label>
         Message:
         <input @bind="_messageInput" size="50" />
-    </label>
-</div>
-<button @onclick="SendAsync" disabled="@(!IsConnected)">Send</button>
+        </label>
+        </div>
+        <button @onclick="SendAsync" disabled="@(!IsConnected)">Send</button>
 
-<hr>
+        <hr>
 
-<ul id="messagesList">
-    @foreach (var message in messages)
-    {
+        <ul id="messagesList">
+        @foreach (var message in messages)
+        {
         <li>@message.Name: @message.Message</li>
-    }
-</ul>
-
+        }
+        </ul>*@
+    <p>Server connection state: @_hubConnection.State</p>
+</main>
 @code {
     private HubConnection _hubConnection;
-    private List<ChatMessage> messages = new List<ChatMessage>();
-    private string _userInput;
-    private string _messageInput;
-    private readonly HttpClient _httpClient = new HttpClient();
+    private string _userName = "";
+    private string _chatMessage = "";
     private string _functionsUrl;
-    public bool IsConnected => _hubConnection.State == HubConnectionState.Connected;
+    private Game? _currentGame;
+    private bool _startDisabled = true;
+    private List<ChatMessage> messages = new List<ChatMessage>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,16 +77,21 @@
         await _hubConnection.StartAsync();
     }
 
-    async Task SendAsync()
+    private async Task SendAsync()
     {
         var msg = new ChatMessage
         {
-            Name = _userInput,
-            Message = _messageInput
+            Name = _userName,
+            Message = _chatMessage
         };
-        await _httpClient.PostAsJsonAsync($"{_functionsUrl}/api/messages", msg);
-        _messageInput = string.Empty;
+        await HttpClient.PostAsJsonAsync($"{_functionsUrl}/api/messages", msg);
+        _chatMessage = string.Empty;
         StateHasChanged();
     }
 
+    private async Task StartGame()
+    {
+        _currentGame = GameController.CreateGame(_userName);
+
+    }
 }

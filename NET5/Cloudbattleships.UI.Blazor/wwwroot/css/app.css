@@ -43,8 +43,8 @@ body {
 }
 
 .cover-container {
-    max-width: 75em;
-    min-width: 75em;
+    max-width: 55em;
+    min-width: 55em;
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -109,10 +109,6 @@ body {
 
     .masthead-brand {
         float: left;
-        max-width: 5em;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
     }
 
     .nav-masthead {
@@ -122,14 +118,6 @@ body {
     .cover-art {
         max-width: 200px;
         max-height: 200px;
-    }
-
-    .small-header {
-        font-size: 0.7rem;
-    }
-
-    .cover-heading {
-        font-size: 1.0rem;
     }
 }
 
@@ -155,8 +143,8 @@ body {
 
 @media (min-width: 60em) {
     .cover-container {
-        max-width: 75em;
-        min-width: 75em;
+        max-width: 55em;
+        min-width: 55em;
     }
 
     .masthead-brand {
@@ -224,6 +212,7 @@ body {
 }
 
 .result-table {
+    overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
     -webkit-scrollbar-width: 0px;
@@ -306,48 +295,3 @@ table tbody td a {
     border: 1px solid #555;
     margin-bottom: 4px;
 }
-
-.gmap {
-    height: 300px;
-    width: 300px;
-}
-
-.timePicker {
-    display: block !important;
-}
-
-.rz-dropdown-item {
-    color: black !important;
-}
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid red;
-}
-
-.validation-message {
-    color: red;
-}
-
-#blazor-error-ui {
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-}
-
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
