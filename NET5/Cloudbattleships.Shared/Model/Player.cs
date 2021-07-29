@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cloudbattleships.Shared.Model
 {
@@ -12,6 +13,8 @@ namespace Cloudbattleships.Shared.Model
         public GameBoard GameBoard { get; set; } = new GameBoard();
         public FiringBoard FiringBoard { get; set; } = new FiringBoard();
         public List<Ship> Ships { get; set; } = new List<Ship>();
+        public bool IsMyTurn { get; set; }
+        public bool HasLost => Ships.All(x => x.IsSunk);
         public void Setup()
         {
             Ships = new List<Ship>()

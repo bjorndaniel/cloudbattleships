@@ -68,5 +68,91 @@ namespace Cloudbattleships.Shared
                 }
             }
         }
+
+        public static Panel? FireShot(Player player)
+        {
+            //If there are hits on the board with neighbors which don't have shots, we should fire at those first.
+            var hitNeighbors = player.FiringBoard.GetHitNeighbors();
+            Panel? panel;
+            if (hitNeighbors.Any())
+            {
+                panel = SearchingShot(player);
+            }
+            else
+            {
+                panel = RandomShot(player);
+            }
+            Console.WriteLine(player.Name + " says: \"Firing shot at " + panel?.Row.ToString() + ", " + panel?.Column.ToString() + "\"");
+            return panel;
+        }
+
+        public static Panel? RandomShot(Player p)
+        {
+            var availablePanels = p.FiringBoard.GetOpenRandomPanels();
+            if (!availablePanels.Any())
+            {
+                return null;
+            }
+            var rand = new Random(Guid.NewGuid().GetHashCode());
+            var panelID = rand.Next(availablePanels.Count() - 1);
+            while (panelID > availablePanels.Count())
+            {
+                panelID = rand.Next(availablePanels.Count() - 1);
+            }
+            return availablePanels.ElementAt(panelID);
+        }
+
+        public static Panel? SearchingShot(Player p)
+        {
+            var rand = new Random(Guid.NewGuid().GetHashCode());
+            var hitNeighbors = p.FiringBoard.GetHitNeighbors();
+            var neighborID = rand.Next(hitNeighbors.Count);
+            return hitNeighbors.ElementAt(neighborID);
+        }
+
+        public static ShotResult ProcessShot(Player p, Panel? hitPanel)
+        {
+            if (hitPanel == null)
+            {
+                Console.WriteLine(p.Name + " says: \"Miss!\"");
+                return ShotResult.Miss;
+            }
+            var panel = p.GameBoard.Panels.At(hitPanel.Row, hitPanel.Column);
+            Console.WriteLine($"Panel is occupied {panel.IsOccupied()}");
+            if (!panel.IsOccupied())
+            {
+                Console.WriteLine(p.Name + " says: \"Miss!\"");
+                return ShotResult.Miss;
+            }
+            var ship = p.Ships.First(x => x.Type == panel.Type);
+            ship.Hits++;
+            panel.IsHit = true;
+            Console.WriteLine(p.Name + " says: \"Hit!\"");
+            if (ship.IsSunk)
+            {
+                Console.WriteLine(p.Name + " says: \"You sunk my " + ship.Name + "!\"");
+            }
+            return ShotResult.Hit;
+        }
+
+        public static void ProcessShotResult(Player p, Coordinates coords, ShotResult result)
+        {
+            if (coords == null)
+            {
+                return;
+            }
+            var panel = p.FiringBoard.Panels.At(coords.Row, coords.Column);
+            switch (result)
+            {
+                case ShotResult.Hit:
+                    panel.Type = OccupationType.Hit;
+                    break;
+
+                default:
+                    panel.Type = OccupationType.Miss;
+                    break;
+            }
+        }
+
     }
 }

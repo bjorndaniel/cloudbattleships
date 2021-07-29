@@ -188,6 +188,14 @@
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl($"{_functionsUrl}/api/")
                 .Build();
+            _hubConnection.On<Game>("gameUpdated", async (game) =>
+            {
+                if (game.Id == _currentGame?.Id)
+                {
+                    _currentGame = game;
+                    await InvokeAsync(StateHasChanged);
+                }
+            });
             await _hubConnection.StartAsync();
         }
         catch (Exception e)
@@ -234,15 +242,15 @@
         }
     }
 
-    private  void SelectFiringSquare(Panel selectedSquare)
-  {
-      Console.WriteLine($"Clicked on {selectedSquare.Row} {selectedSquare.Column}");
-      var panel = _me.FiringBoard.GetPanel(selectedSquare.Row, selectedSquare.Column);
-      if (panel == null || panel.Status != " ")
-      {
-          return;
-      }
-      _selectedRow = selectedSquare.Row;
-      _selectedColumn = selectedSquare.Column;
-  }
+    private void SelectFiringSquare(Panel selectedSquare)
+    {
+        Console.WriteLine($"Clicked on {selectedSquare.Row} {selectedSquare.Column}");
+        var panel = _me.FiringBoard.GetPanel(selectedSquare.Row, selectedSquare.Column);
+        if (panel == null || panel.Status != " ")
+        {
+            return;
+        }
+        _selectedRow = selectedSquare.Row;
+        _selectedColumn = selectedSquare.Column;
+    }
 }
