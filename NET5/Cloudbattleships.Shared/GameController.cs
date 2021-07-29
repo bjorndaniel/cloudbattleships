@@ -12,6 +12,6 @@ namespace Cloudbattleships.Shared
         };
 
         public static bool IsPlayerValid(Player player)=>
-            player.ClientId != Guid.Empty.ToString() && !string.IsNullOrWhiteSpace(player.Name) && player.Id != Guid.Empty.ToString();
+            player.Id != Guid.Empty.ToString() && !string.IsNullOrWhiteSpace(player.Name);
     }
 }

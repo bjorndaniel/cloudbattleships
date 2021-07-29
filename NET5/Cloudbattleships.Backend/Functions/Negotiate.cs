@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Cloudbattleships.Backend.Functions
 {
-    public static class Negotiate
+    public static class Negotiate 
     {
         [Function("Negotiate")]
         public static HttpResponseData Run(

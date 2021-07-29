@@ -11,8 +11,9 @@ namespace Cloudbattleships.Shared.Model
         public Player? Player2 { get; set; }
         public string Winner { get; set; } = "";
         public bool GameOver { get; set; }
-        public bool HasClient(string clientId) => Player1?.ClientId == clientId || Player2?.ClientId == clientId;
+        public bool HasPlayer(string id) => Player1?.Id == id || Player2?.Id == id;
         public bool IsStarted => Player1 != null && Player2 != null;
         public bool SpotAvailable => Player2 == null;
+        public Player? GetPlayer(string id) => Player1.Id == id ? Player1 : Player2;
     }
 }

@@ -295,3 +295,38 @@ table tbody td a {
     border: 1px solid #555;
     margin-bottom: 4px;
 }
+
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+    table tr td {
+        border-right: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+    }
+
+    table tr td {
+        border-left: 1px solid #fff;
+        border-top: 1px solid #fff;
+    }
+
+    /* top-left border-radius */
+    table tr:first-child td:first-child {
+        border-top-left-radius: 6px;
+    }
+
+    /* top-right border-radius */
+    table tr:first-child td:last-child {
+        border-top-right-radius: 6px;
+    }
+
+    /* bottom-left border-radius */
+    table tr:last-child td:first-child {
+        border-bottom-left-radius: 6px;
+    }
+
+    /* bottom-right border-radius */
+    table tr:last-child td:last-child {
+        border-bottom-right-radius: 6px;
+    }

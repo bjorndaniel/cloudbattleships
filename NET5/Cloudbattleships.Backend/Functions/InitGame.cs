@@ -14,7 +14,6 @@ namespace Cloudbattleships.Backend.Functions
         [Function("InitGame")]
         public static async Task<HttpResponseData> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
-            [SignalRConnectionInfoInput(HubName = "cloudbattleships")] string connectionInfo,
             FunctionContext executionContext
         )
         {
@@ -26,7 +25,7 @@ namespace Cloudbattleships.Backend.Functions
                 return req.CreateResponse(HttpStatusCode.BadRequest);
             }
             var game = await CosmosDbHandler.FindOpenGameAsync(player, logger);
-            if(game == null)
+            if (game == null)
             {
                 return req.CreateResponse(HttpStatusCode.InternalServerError);
             }

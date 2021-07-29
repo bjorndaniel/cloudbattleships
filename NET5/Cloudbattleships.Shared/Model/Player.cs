@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Cloudbattleships.Shared.Model
 {
@@ -7,8 +8,22 @@ namespace Cloudbattleships.Shared.Model
     {
         [JsonProperty(PropertyName = "id")]//Using Newtonsoft here since CosmosDb does not work with System.Text.Json
         public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string ClientId { get; set; } = "";
         public string Name { get; set; } = "";
-
+        public GameBoard GameBoard { get; set; } = new GameBoard();
+        public FiringBoard FiringBoard { get; set; } = new FiringBoard();
+        public List<Ship> Ships { get; set; } = new List<Ship>();
+        public void Setup()
+        {
+            Ships = new List<Ship>()
+            {
+                new Destroyer(),
+                new Submarine(),
+                new Cruiser(),
+                new Battleship(),
+                new Carrier()
+            };
+            GameBoard.Setup();
+            FiringBoard.Setup();
+        }
     }
 }

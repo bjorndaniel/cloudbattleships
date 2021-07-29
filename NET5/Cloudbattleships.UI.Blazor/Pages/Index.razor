@@ -10,23 +10,109 @@
             <p>Built using Blazor, Cosmos Db, Azure Functions and Azure SignalR</p>
         </div>
     </div>
-    <div class="row justify-content-center  ">
-        <div class="col-6 offset-3 mx-auto">
-            <form>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Username" @bind="@_userName" @onfocusout="@((e) => _startDisabled = string.IsNullOrEmpty(_userName))" />
-                </div>
-                <button type="button" class="btn btn-primary mb-2" disabled="@_startDisabled" @onclick=@StartGame>Play game</button>
-                <small class="form-text text-muted-app">Type a username and click Play game to join a game if one exists or create a new one and wait for opponent</small>
+    @if (_isLoading)
+    {
 
-                @*   <input type="hidden" bind="@Player.Id" id="playerId" />
-                    <input type="hidden" bind="@CurrentGame.id" id="gameId" />
-                    <input type="hidden" bind="@SelectedRow" id="hfSelectedRow" />
-                    <input type="hidden" bind="@SelectedColumn" id="hfSelectedColumn" />
-                    <input type="hidden" bind="@ClientId" id="hfClientId" />*@
-            </form>
+        <div class="container mt-auto mb-auto">
+            <div class="row css-load-parent">
+                <div class="col text-center my-auto">
+                    <div class="cssload-loader-inner">
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <h3>@_loadingMessage</h3>
+                </div>
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        @if (_currentGame != null)
+        {
+            if (_currentGame.SpotAvailable)
+            {
+                <h3>Waiting for second player</h3>
+            }
+            <div class="row">
+                <div class="col text-center">
+                    <h4>Your ships</h4>
+                    <table class="ship-board">
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <tr>
+                                @for (int j = 1; j <= 10; j++)
+                                {
+                                    var panel = _me.GameBoard.GetPanel(i, j);
+                                    <td class="ship-tile @((panel?.IsHit??false) ? "red" : "")">
+                                        <div style="width:35px;height:35px;">
+                                            @(panel?.Status)
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="col text-center">
+                    <h4>Firing board</h4>
+                    <table class="ship-board">
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <tr>
+                                @for (int j = 1; j <= 10; j++)
+                                {
+                                    var square = new Panel(i, j);
+                                    <td class="ship-tile @(_me.FiringBoard.GetPanel(i ,j)?.Status == "X" ? "green" : "")">
+                                        <div style="width:35px;height:35px;" class="@((_selectedRow == i && _selectedColumn == j) ? "yellow" : "")"
+                             @onclick="@(() => SelectFiringSquare(square))">
+                                            @_me.FiringBoard.GetPanel(i,j)?.Status
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row justify-content-center  ">
+                <div class="col-6 offset-3 mx-auto">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Username" @bind="@_userName" @onfocusout="@((e) => _startDisabled = string.IsNullOrEmpty(_userName))" />
+                        </div>
+                        <button type="button" class="btn btn-primary mb-2" disabled="@_startDisabled" @onclick=@StartGame>Play game</button>
+                        <small class="form-text text-muted-app">Type a username and click Play game to join a game if one exists or create a new one and wait for opponent</small>
+
+                        @*   <input type="hidden" bind="@Player.Id" id="playerId" />
+                            <input type="hidden" bind="@CurrentGame.id" id="gameId" />
+                            <input type="hidden" bind="@SelectedRow" id="hfSelectedRow" />
+                            <input type="hidden" bind="@SelectedColumn" id="hfSelectedColumn" />
+                            <input type="hidden" bind="@ClientId" id="hfClientId" />*@
+                    </form>
+                </div>
+            </div>
+        }
+    }
 
     @* <h1>@_hubConnection.State</h1>
 
@@ -52,29 +138,33 @@
         <li>@message.Name: @message.Message</li>
         }
         </ul>*@
-    <p>Server connection state: @_hubConnection.State</p>
+    @*<p>Server connection state: @_hubConnection.State</p>*@
 </main>
 @code {
-    private HubConnection _hubConnection;
+    private HubConnection? _hubConnection;
     private string _userName = "";
     private string _chatMessage = "";
-    private string _functionsUrl;
+    private string _functionsUrl = "";
     private Game? _currentGame;
+    private Player _me = new Player();
     private bool _startDisabled = true;
     private List<ChatMessage> messages = new List<ChatMessage>();
-
-    protected override async Task OnInitializedAsync()
+    private bool _isLoading;
+    private string _loadingMessage = "";
+    private int _selectedRow;
+    private int _selectedColumn;
+    protected override void OnInitialized()
     {
         _functionsUrl = Configuration["FunctionsApi"];
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl($"{_functionsUrl}/api/")
-            .Build();
-        _hubConnection.On<ChatMessage>("newMessage", (clientMessage) =>
-        {
-            messages.Add(clientMessage);
-            StateHasChanged();
-        });
-        await _hubConnection.StartAsync();
+        //_hubConnection = new HubConnectionBuilder()
+        //    .WithUrl($"{_functionsUrl}/api/")
+        //    .Build();
+        //_hubConnection.On<ChatMessage>("newMessage", (clientMessage) =>
+        //{
+        //    messages.Add(clientMessage);
+        //    StateHasChanged();
+        //});
+        //await _hubConnection.StartAsync();
     }
 
     private async Task SendAsync()
@@ -91,7 +181,68 @@
 
     private async Task StartGame()
     {
-        _currentGame = GameController.CreateGame(_userName);
+        _isLoading = true;
+        _loadingMessage = "Connecting to server...";
+        try
+        {
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl($"{_functionsUrl}/api/")
+                .Build();
+            await _hubConnection.StartAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
 
+        var count = 0;
+        while (_hubConnection?.State == HubConnectionState.Connecting)
+        {
+            await Task.Delay(500);
+            count++;
+            if (count > 10)
+            {
+                break;
+            }
+        }
+        if (_hubConnection?.State != HubConnectionState.Connected)
+        {
+            _loadingMessage = "Could not connect to server. Please reload the page!";
+        }
+        _loadingMessage = "Searching for game...";
+        _me = new Player { Name = _userName };
+        var content = new StringContent(JsonSerializer.Serialize(_me), System.Text.UTF8Encoding.UTF8, "application/json");
+        try
+        {
+            var response = await HttpClient.PostAsync($"{_functionsUrl}/api/initGame", content);
+            if (response.IsSuccessStatusCode)
+            {
+                _currentGame = await JsonSerializer.DeserializeAsync<Game>(await response.Content.ReadAsStreamAsync());
+                _me = _currentGame?.GetPlayer(_me.Id) ?? _me;
+                _isLoading = false;
+                _loadingMessage = "";
+            }
+            else
+            {
+                _loadingMessage = "Could not find a game. Please reload the page and try again!";
+            }
+        }
+        catch (Exception e)
+        {
+            _loadingMessage = "Could not find a game. Please reload the page and try again!";
+            Console.WriteLine(e.ToString());
+        }
     }
+
+    private  void SelectFiringSquare(Panel selectedSquare)
+  {
+      Console.WriteLine($"Clicked on {selectedSquare.Row} {selectedSquare.Column}");
+      var panel = _me.FiringBoard.GetPanel(selectedSquare.Row, selectedSquare.Column);
+      if (panel == null || panel.Status != " ")
+      {
+          return;
+      }
+      _selectedRow = selectedSquare.Row;
+      _selectedColumn = selectedSquare.Column;
+  }
 }

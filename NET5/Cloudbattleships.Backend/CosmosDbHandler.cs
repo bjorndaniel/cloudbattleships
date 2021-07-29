@@ -26,7 +26,8 @@ namespace Cloudbattleships.Backend
                 var collectionUri = UriFactory.CreateDocumentCollectionUri(_dbName, _collectionName);
                 var existingGame = client.CreateDocumentQuery<Game>(collectionUri, feedOptions: options)
                     .Where(_ => _.SpotAvailable).AsEnumerable().FirstOrDefault();
-                if(existingGame != null)
+                PlayerController.PlaceShips(player);
+                if (existingGame != null)
                 {
                     existingGame.Player2 = player;
                     await client.UpsertDocumentAsync(collectionUri, existingGame);
