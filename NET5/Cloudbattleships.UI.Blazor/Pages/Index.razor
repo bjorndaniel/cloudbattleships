@@ -193,6 +193,7 @@
                 if (game.Id == _currentGame?.Id)
                 {
                     _currentGame = game;
+                    _isLoading = false;
                     await InvokeAsync(StateHasChanged);
                 }
             });
@@ -242,15 +243,26 @@
         }
     }
 
-    private void SelectFiringSquare(Panel selectedSquare)
+    private async Task SelectFiringSquare(Panel selectedSquare)
     {
+        _isLoading = true;
+        _loadingMessage = $"Firing at row:{(selectedSquare.Row + 1)} column: {(selectedSquare.Column +1)}";
         Console.WriteLine($"Clicked on {selectedSquare.Row} {selectedSquare.Column}");
-        var panel = _me.FiringBoard.GetPanel(selectedSquare.Row, selectedSquare.Column);
-        if (panel == null || panel.Status != " ")
+        var message = new FireMessage
         {
-            return;
-        }
-        _selectedRow = selectedSquare.Row;
-        _selectedColumn = selectedSquare.Column;
+            GameId = _currentGame!.Id,
+            PlayerId = _me.Id,
+            Row = selectedSquare.Row,
+            Column = selectedSquare.Column
+        };
+        var content = new StringContent(JsonSerializer.Serialize(message), System.Text.UTF8Encoding.UTF8, "application/json");
+        await HttpClient.PostAsync($"{_functionsUrl}/api/fire", content);
+        //var panel = _me.FiringBoard.GetPanel(selectedSquare.Row, selectedSquare.Column);
+        //if (panel == null || panel.Status != " ")
+        //{
+        //    return;
+        //}
+        //_selectedRow = selectedSquare.Row;
+        //_selectedColumn = selectedSquare.Column;
     }
 }

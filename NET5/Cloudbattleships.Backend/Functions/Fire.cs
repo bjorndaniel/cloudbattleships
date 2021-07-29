@@ -27,7 +27,10 @@ namespace Cloudbattleships.Backend.Functions
             return new
             {
                 Target = "gameUpdated",
-                Arguments = game
+                Arguments = new Game[]
+                {
+                    game
+                }
             };
         }
     }
