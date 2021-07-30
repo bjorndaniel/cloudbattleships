@@ -8,7 +8,8 @@ namespace Cloudbattleships.Shared
         public static Game CreateGame(Player player) => new Game
         {
             Id = Guid.NewGuid().ToString(),
-            Player1 = player
+            Player1 = player,
+            StartDate = DateTimeOffset.UtcNow
         };
 
         public static bool IsPlayerValid(Player player)=>
@@ -62,11 +63,13 @@ namespace Cloudbattleships.Shared
             {
                 game.GameOver = true;
                 game.Winner = game.Player2.Name;
+                game.EndDate = DateTimeOffset.UtcNow;
             }
             else if (game.Player2.HasLost)
             {
                 game.GameOver = true;
                 game.Winner = game.Player1.Name;
+                game.EndDate = DateTimeOffset.UtcNow;
             }
             return game;
         }

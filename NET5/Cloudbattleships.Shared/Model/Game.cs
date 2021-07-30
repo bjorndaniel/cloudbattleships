@@ -15,5 +15,7 @@ namespace Cloudbattleships.Shared.Model
         public bool IsStarted => Player1 != null && Player2 != null;
         public bool SpotAvailable => Player2 == null;
         public Player? GetPlayer(string id) => Player1.Id == id ? Player1 : Player2;
+        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }    
     }
 }

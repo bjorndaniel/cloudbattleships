@@ -3,6 +3,7 @@ using Cloudbattleships.Shared.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Cloudbattleships.Backend.Functions
 {
@@ -10,7 +11,7 @@ namespace Cloudbattleships.Backend.Functions
     {
         [Function("Fire")]
         [SignalROutput(HubName = "cloudbattleships")]
-        public static async System.Threading.Tasks.Task<object> RunAsync(
+        public static async Task<object> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
             FunctionContext executionContext)
         {

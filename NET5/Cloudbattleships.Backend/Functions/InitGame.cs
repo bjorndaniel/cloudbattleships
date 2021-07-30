@@ -12,7 +12,8 @@ namespace Cloudbattleships.Backend.Functions
     public static class InitGame
     {
         [Function("InitGame")]
-        public static async Task<HttpResponseData> Run(
+        [SignalROutput(HubName = "cloudbattleships")]
+        public static async Task<object> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
             FunctionContext executionContext
         )
@@ -25,14 +26,14 @@ namespace Cloudbattleships.Backend.Functions
                 return req.CreateResponse(HttpStatusCode.BadRequest);
             }
             var game = await CosmosDbHandler.FindOpenGameAsync(player, logger);
-            if (game == null)
+            return new
             {
-                return req.CreateResponse(HttpStatusCode.InternalServerError);
-            }
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "application/json");
-            response.WriteString(JsonSerializer.Serialize(game));
-            return response;
+                Target = "gameUpdated",
+                Arguments = new Game[]
+                {
+                    game
+                }
+            };
         }
     }
 }

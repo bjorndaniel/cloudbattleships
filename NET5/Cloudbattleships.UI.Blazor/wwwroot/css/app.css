@@ -330,3 +330,15 @@ table {
     table tr:last-child td:last-child {
         border-bottom-right-radius: 6px;
     }
+
+.fired-on {
+    background-color: #FFDF25;
+}
+.hit {
+    background-color: #FF6969;
+    color: #000;
+}
+.chat-box{
+    max-height:150px;
+    overflow-y: scroll;
+}
