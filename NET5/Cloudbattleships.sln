@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudbattleships.Backend", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cloudbattleships.Shared", "Cloudbattleships.Shared\Cloudbattleships.Shared.csproj", "{715F2EA5-F7FA-444E-BAF0-12C709E58A04}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildAndDeploy", "BuildAndDeploy", "{ECB3A0F7-1FCA-42B5-8693-63A699B8051E}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\azure-static-web-apps-proud-flower-0dfad4803.yml = ..\.github\workflows\azure-static-web-apps-proud-flower-0dfad4803.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
