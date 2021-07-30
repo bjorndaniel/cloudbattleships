@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureSignalRConnectionString": "YOUR-AZURE-SIGNALR-CONNECTIONSTRING",
+    "CosmosUri": "YOUR-COSMOSDB-URI",
+    "CosmosKey": "YOUR-COSMOS-DB-ACCESSKEY",
+    "CosmosConnection": "YOUR-COSMOSDB-CONNECTION-STRING",
+    "DbName": "YOUR-DB-NAME",
+    "DbCollection": "YOUR-DOCUMENT-COLLECTION"
+  },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*"
+  }
+}

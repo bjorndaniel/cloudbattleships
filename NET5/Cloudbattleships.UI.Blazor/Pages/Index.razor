@@ -1,0 +1,316 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject HttpClient HttpClient
+@inject IConfiguration Configuration
+
+<main role="main" class="justify-content-center text-center mt-auto">
+    <div class="row align-self-top justify-content-center text-center">
+        <div class="col">
+            <h2>Blazorships - a battleships implementation</h2>
+            <p>Built using Blazor, Cosmos Db, Azure Functions and Azure SignalR</p>
+        </div>
+    </div>
+    @if (_isLoading)
+    {
+
+        <div class="container mt-auto mb-auto">
+            <div class="row css-load-parent">
+                <div class="col text-center my-auto">
+                    <div class="cssload-loader-inner">
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                        <div class="cssload-cssload-loader-line-wrap-wrap">
+                            <div class="cssload-loader-line-wrap"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <h3>@_loadingMessage</h3>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (_currentGame != null)
+        {
+
+            <div class="row">
+                <div class="col text-center">
+                    <h4>Your ships</h4>
+                    <table class="ship-board">
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <tr>
+                                @for (int j = 1; j <= 10; j++)
+                                {
+                                    var panel = _me.GameBoard.GetPanel(i, j);
+                                    <td class="ship-tile @((panel?.IsHit??false) ? "hit" : "")">
+                                        <div style="width:35px;height:35px;">
+                                            @(panel?.Status)
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="col text-center">
+                    <h4>Firing board</h4>
+                    <table class="ship-board">
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <tr>
+                                @for (int j = 1; j <= 10; j++)
+                                {
+                                    var square = new Panel(i, j);
+                                    <td class="ship-tile @(_me.FiringBoard.GetPanel(i ,j)?.Status == "X" ? "hit" : "")">
+                                        <div style="width:35px;height:35px;" class="@((_selectedRow == i && _selectedColumn == j) ? "fired-on" : "")"
+                             @onclick="@(() => SelectFiringSquare(square))">
+                                            @_me.FiringBoard.GetPanel(i,j)?.Status
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-5 offset-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Username" @oninput="@(input => UserNameChange(input))" />
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-primary mb-2" disabled="@_startDisabled" @onclick=@StartGame>Play</button>
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col">
+                @if (_currentGame != null)
+                {
+                    <small class="form-text text-muted-app">X = You hit a ship M = Miss, empty square</small>
+                }
+                <h3>@_gameMessage</h3>
+            </div>
+        </div>
+        @if (_currentGame != null)
+        {
+            <div class="row justify-content-center  ">
+                <div class="col">
+                    <h4>Game chat</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5 offset-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Type your message here and click send" @bind="@_chatMessage.Message">
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-primary mb-2" @onclick=@SendMessageAsync>Send</button>
+                </div>
+            </div>
+            <div class="row message-box justify-conent-center">
+                <div class="col-6 offset-3 text-left">
+                    <ul class="list-unstyled">
+                        @foreach (var message in _messages)
+                        {
+                            var text = message.UserId == _me.Id ? $"You: {message.Message}" : $"{message.Name}: {message.Message}";
+                            <li>
+                                @text
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    }
+
+</main>
+@code {
+    private HubConnection? _hubConnection;
+    private string _userName = "";
+    private ChatMessage _chatMessage = new ChatMessage();
+    private string _functionsUrl = "";
+    private Game? _currentGame;
+    private Player _me = new Player();
+    private bool _startDisabled = true;
+    private List<ChatMessage> _messages = new List<ChatMessage>();
+    private bool _isLoading;
+    private bool _isFiring;
+    private string _loadingMessage = "";
+    private string _gameMessage = "";
+    private int _selectedRow;
+    private int _selectedColumn;
+    private Dictionary<string, string> _keys = new Dictionary<string, string>();
+    protected override void OnInitialized()
+    {
+        _functionsUrl = Configuration["FunctionsApi"];
+        _keys.Add("InitGame",  Configuration["InitGameKey"]);
+        _keys.Add("Fire",  Configuration["FireKey"]);
+        _keys.Add("Message", Configuration["MessagesKey"]);
+    }
+
+    private void UserNameChange(ChangeEventArgs e)
+    {
+        _userName = e.Value?.ToString();
+        _startDisabled = string.IsNullOrEmpty(_userName);
+    }
+
+    private async Task SendMessageAsync()
+    {
+        var content = new StringContent(JsonSerializer.Serialize(_chatMessage), System.Text.UTF8Encoding.UTF8, "application/json");
+        _keys.TryGetValue("Message", out var code);
+        await HttpClient.PostAsync($"{_functionsUrl}/api/messages?code={code}", content);
+        _chatMessage.Message = "";
+    }
+
+    private async Task StartGame()
+    {
+        _isLoading = true;
+        _loadingMessage = "Connecting to server...";
+        try
+        {
+            await SetupHubConnectionAsync();
+        }
+        catch (Exception) { }
+        var count = 0;
+        while (_hubConnection?.State == HubConnectionState.Connecting)
+        {
+            await Task.Delay(500);
+            count++;
+            if (count > 10)
+            {
+                break;
+            }
+        }
+        if (_hubConnection?.State != HubConnectionState.Connected)
+        {
+            _loadingMessage = "Could not connect to server. Please reload the page!";
+        }
+        await SearchForGameAsync();
+    }
+
+    private async Task SelectFiringSquare(Panel selectedSquare)
+    {
+        if (!_me.IsMyTurn || (_currentGame?.GameOver ?? true) || _isFiring)
+        {
+            return;
+        }
+        _isFiring = true;
+        _selectedRow = selectedSquare.Row;
+        _selectedColumn = selectedSquare.Column;
+        _gameMessage = $"Firing at row: {(selectedSquare.Row + 1)} column: {(selectedSquare.Column + 1)}";
+        Console.WriteLine($"Clicked on {selectedSquare.Row} {selectedSquare.Column}");
+        var message = new FireMessage
+        {
+            GameId = _currentGame!.Id,
+            PlayerId = _me.Id,
+            Row = selectedSquare.Row,
+            Column = selectedSquare.Column
+        };
+        var content = new StringContent(JsonSerializer.Serialize(message), System.Text.UTF8Encoding.UTF8, "application/json");
+        _keys.TryGetValue("Fire", out var code);
+        await HttpClient.PostAsync($"{_functionsUrl}/api/fire?code={code}", content);
+    }
+
+    private async Task SetupHubConnectionAsync()
+    {
+          _hubConnection = new HubConnectionBuilder()
+                .WithUrl($"{_functionsUrl}/api/")
+                .Build();
+            _hubConnection.On<Game>("gameUpdated", async (game) =>
+            {
+                await UpdateGameAsync(game);
+            });
+            _hubConnection.On<ChatMessage>("newMessage", async (chatMessage) =>
+            {
+                if (chatMessage.GameId == _currentGame.Id)
+                {
+                    _messages.Insert(0, chatMessage);
+                }
+                await InvokeAsync(StateHasChanged);
+            });
+            await _hubConnection.StartAsync();
+    }
+
+    private async Task UpdateGameAsync(Game game)
+    {
+        Console.WriteLine("Game updated message");
+        if (game.Id == _currentGame?.Id ||
+            (_currentGame == null && game.Player1.Id == _me.Id || game.Player2?.Id == _me.Id))
+        {
+            _currentGame = game;
+
+            _me = _currentGame?.GetPlayer(_me.Id) ?? _me;
+            _selectedRow = -1;
+            _selectedColumn = -1;
+            _chatMessage.GameId = game.Id;
+            _chatMessage.Name = _me.Name;
+            _chatMessage.UserId = _me.Id;
+            _isLoading = false;
+            _isFiring = false;
+            if (_currentGame.GameOver)
+            {
+                _gameMessage = $"Game over. The winner is {_currentGame.Winner}!";
+            }
+            else if (_me.IsMyTurn)
+            {
+                _gameMessage = "Click on a firing board square to fire";
+            }
+            else if (_currentGame.Player2 == null)
+            {
+                _gameMessage = "Wating for opponent to join";
+            }
+            else
+            {
+                _gameMessage = "Wating for opponent to fire";
+            }
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task SearchForGameAsync()
+    {
+        _loadingMessage = "Searching for game...";
+        _me = new Player { Name = _userName };
+        var content = new StringContent(JsonSerializer.Serialize(_me), System.Text.UTF8Encoding.UTF8, "application/json");
+        try
+        {
+            _keys.TryGetValue("InitGame", out var code);
+            var response = await HttpClient.PostAsync($"{_functionsUrl}/api/initGame?code={code}", content);
+            if (response.IsSuccessStatusCode)
+            {
+                _isLoading = false;
+                _loadingMessage = "";
+            }
+            else
+            {
+                _loadingMessage = "Could not find a game. Please reload the page and try again!";
+            }
+        }
+        catch (Exception e)
+        {
+            _loadingMessage = "Could not find a game. Please reload the page and try again!";
+            Console.WriteLine(e.ToString());
+        }
+    }
+}
