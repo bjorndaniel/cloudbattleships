@@ -26,7 +26,7 @@ jobs:
     - name: Restore 
       run: dotnet restore "./NET5/Cloudbattleships.Backend/Cloudbattleships.Backend.csproj"
     - name: Build
-      run: dotnet build "$./NET5/Cloudbattleships.Backend/Cloudbattleships.Backend.csproj" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build "./NET5/Cloudbattleships.Backend/Cloudbattleships.Backend.csproj" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Publish
       run: dotnet publish "./NET5/Cloudbattleships.Backend/Cloudbattleships.Backend.csproj" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
     - name: Deploy to Azure Function App
