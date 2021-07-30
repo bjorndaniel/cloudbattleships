@@ -14,7 +14,7 @@ namespace Cloudbattleships.Backend.Functions
         [Function("InitGame")]
         [SignalROutput(HubName = "cloudbattleships")]
         public static async Task<object> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
+            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
             FunctionContext executionContext
         )
         {

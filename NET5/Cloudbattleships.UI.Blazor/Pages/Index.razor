@@ -160,9 +160,13 @@
     private string _gameMessage = "";
     private int _selectedRow;
     private int _selectedColumn;
+    private Dictionary<string, string> _keys = new Dictionary<string, string>();
     protected override void OnInitialized()
     {
         _functionsUrl = Configuration["FunctionsApi"];
+        _keys.Add("InitGame",  Configuration["InitGameKey"]);
+        _keys.Add("Fire",  Configuration["FireKey"]);
+        _keys.Add("Message", Configuration["MessagesKey"]);
     }
 
     private void UserNameChange(ChangeEventArgs e)
@@ -174,7 +178,8 @@
     private async Task SendMessageAsync()
     {
         var content = new StringContent(JsonSerializer.Serialize(_chatMessage), System.Text.UTF8Encoding.UTF8, "application/json");
-        await HttpClient.PostAsync($"{_functionsUrl}/api/messages", content);
+        _keys.TryGetValue("Message", out var code);
+        await HttpClient.PostAsync($"{_functionsUrl}/api/messages?code={code}", content);
         _chatMessage.Message = "";
     }
 
@@ -223,7 +228,8 @@
             Column = selectedSquare.Column
         };
         var content = new StringContent(JsonSerializer.Serialize(message), System.Text.UTF8Encoding.UTF8, "application/json");
-        await HttpClient.PostAsync($"{_functionsUrl}/api/fire", content);
+        _keys.TryGetValue("Fire", out var code);
+        await HttpClient.PostAsync($"{_functionsUrl}/api/fire?code={code}", content);
     }
 
     private async Task SetupHubConnectionAsync()
@@ -289,7 +295,8 @@
         var content = new StringContent(JsonSerializer.Serialize(_me), System.Text.UTF8Encoding.UTF8, "application/json");
         try
         {
-            var response = await HttpClient.PostAsync($"{_functionsUrl}/api/initGame", content);
+            _keys.TryGetValue("InitGame", out var code);
+            var response = await HttpClient.PostAsync($"{_functionsUrl}/api/initGame?code={code}", content);
             if (response.IsSuccessStatusCode)
             {
                 _isLoading = false;

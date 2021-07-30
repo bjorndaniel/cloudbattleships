@@ -10,7 +10,7 @@ namespace Cloudbattleships.Backend.Functions
         [Function("Messages")]
         [SignalROutput(HubName = "cloudbattleships")]
         public static async System.Threading.Tasks.Task<object> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,
             FunctionContext executionContext)
         {
             var logger = executionContext.GetLogger("Messages");
