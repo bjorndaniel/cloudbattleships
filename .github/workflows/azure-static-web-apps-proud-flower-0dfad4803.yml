@@ -18,8 +18,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-       - name: Build Blazor App
-         run: dotnet publish ./NET5/Cloudbattleships.UI.Blazor/Cloudbattleships.UI.Blazor.csproj -c Released -o published
+          
+      - name: Build Blazor App
+        run: dotnet publish ./NET5/Cloudbattleships.UI.Blazor/Cloudbattleships.UI.Blazor.csproj -c Released -o published
+        
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
