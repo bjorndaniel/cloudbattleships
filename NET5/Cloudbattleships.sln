@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildAndDeploy", "BuildAndDeploy", "{ECB3A0F7-1FCA-42B5-8693-63A699B8051E}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\azure-static-web-apps-proud-flower-0dfad4803.yml = ..\.github\workflows\azure-static-web-apps-proud-flower-0dfad4803.yml
+		..\.github\workflows\CloudbattleshipsBackend.yml = ..\.github\workflows\CloudbattleshipsBackend.yml
 	EndProjectSection
 EndProject
 Global

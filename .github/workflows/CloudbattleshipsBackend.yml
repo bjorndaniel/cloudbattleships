@@ -23,12 +23,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
-    - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+    - name: Restore 
+      run: dotnet restore "./NET5/Cloudbattleships.Backend/Cloudbattleships.Backend.csproj"
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build "$./NET5/Cloudbattleships.Backend/Cloudbattleships.Backend.csproj" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+      run: dotnet publish "./NET5/Cloudbattleships.Backend/Cloudbattleships.Backend.csproj" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
       with:
