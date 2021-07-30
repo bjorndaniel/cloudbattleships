@@ -29,6 +29,8 @@ Also contains shared helper functions and the game model
 - [Ooui](https://github.com/praeclarum/ooui)
 
 ## The future
-- Add Xamarin Forms versions
+- Add Xamarin Forms clients
 - Add some animations
 - Better error handling
+- Add a timed function to remove completed games
+- Add an invite function to be able to invite players via email
