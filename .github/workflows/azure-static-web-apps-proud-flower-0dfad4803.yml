@@ -26,7 +26,7 @@ jobs:
         env:
           FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
           INIT_GAME_KEY: ${{ secrets.INIT_GAME_KEY }}
-          MESSAGE_KEY: ${{ secrets.MESSAGE_KEY }}
+          MESSAGES_KEY: ${{ secrets.MESSAGES_KEY }}
           FIRE_KEY: ${{ secrets.FIRE_KEY }}
           
       - name: Build Blazor App
