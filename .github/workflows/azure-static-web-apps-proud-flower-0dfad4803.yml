@@ -19,6 +19,16 @@ jobs:
         with:
           submodules: true
           
+      - name: Replace tokens
+        uses: cschleiden/replace-tokens@v1
+        with:
+          files: '["**/appsettings.json"]'
+        env:
+          FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
+          INIT_GAME_KEY: ${{ secrets.INIT_GAME_KEY }}
+          MESSAGE_KEY: ${{ secrets.MESSAGE_KEY }}
+          FIRE_KEY: ${{ secrets.FIRE_KEY }}
+          
       - name: Build Blazor App
         run: dotnet publish ./NET5/Cloudbattleships.UI.Blazor/Cloudbattleships.UI.Blazor.csproj -c Released -o published
         
